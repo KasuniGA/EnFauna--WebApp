@@ -1,0 +1,292 @@
+import * as React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  doCreateUserWithEmailAndPassword,
+  doSignInWithGoogle,
+} from "../../../Backend/Auth/auth";
+import { useAuth } from "../Context/authContext/context";
+
+export default function Signup() {
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [isRegistering, setIsRegistering] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSymbol
+    );
+  };
+
+  const onSignUpHandle = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+    setErrorMessage("");
+
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and symbols."
+      );
+      return;
+    }
+
+    setIsRegistering(true);
+    try {
+      const user = await doCreateUserWithEmailAndPassword(email, password);
+      login(user);
+      navigate("/home");
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+    setIsRegistering(false);
+  };
+
+  const onGoogleSignIn = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+    try {
+      const user = await doSignInWithGoogle();
+      login(user);
+      navigate("/home");
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  return (
+    <div
+      className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 p-6 relative py-24"
+      style={{
+        backgroundImage:
+          "url('https://i.pinimg.com/736x/fa/a3/39/faa339ad21e99930d8bc8d17bf55fa61.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Blur Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md"></div>
+
+      {/* Signup Container */}
+      <div className="relative w-full max-w-4xl bg-white dark:bg-gray-800 rounded-3xl shadow-2xl flex overflow-hidden transform scale-105">
+        {/* Left Side - Signup Form (previously on right) */}
+        <div className="w-full md:w-1/2 p-16 flex flex-col justify-center">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white text-center">
+            Join With {" "}
+            <span className="text-green-600 dark:text-green-400">EnFauna</span>
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 text-center mt-3">
+            Please enter your details to sign up.
+          </p>
+
+          <form onSubmit={onSignUpHandle} className="mt-6">
+            <div className="mb-5">
+              <label className="font-medium text-gray-900 dark:text-gray-300">
+                Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border-2 border-gray-100 dark:border-gray-700 rounded-full p-4 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="font-medium text-gray-900 dark:text-gray-300">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border-2 border-gray-100 dark:border-gray-700 rounded-full p-4 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="font-medium text-gray-900 dark:text-gray-300">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border-2 border-gray-100 dark:border-gray-700 rounded-full p-4 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300 pr-12"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                >
+                  {showPassword ? (
+                    // Eye icon (password visible)
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    // Eye-slash icon (password hidden)
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                      <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-5">
+              <label className="font-medium text-gray-900 dark:text-gray-300">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full border-2 border-gray-100 dark:border-gray-700 rounded-full p-4 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300 pr-12"
+                  placeholder="Re-enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                >
+                  {showConfirmPassword ? (
+                    // Eye icon (password visible)
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    // Eye-slash icon (password hidden)
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                      <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {passwordError && (
+              <p className="text-red-500 text-sm mb-2">{passwordError}</p>
+            )}
+            {errorMessage && (
+              <p className="text-red-600 dark:text-red-400 font-semibold text-md text-center mb-2">
+                {errorMessage}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isRegistering}
+              className="w-full bg-green-600 hover:bg-green-500 text-white py-2 rounded-full font-bold transition duration-300"
+            >
+              {isRegistering ? "Signing Up..." : "Sign Up"}
+            </button>
+          </form>
+
+          <div className="relative w-full flex items-center gap-2 my-5 opacity-30 uppercase text-gray-500 dark:text-gray-200 font-bold">
+            <hr className="w-1/2 border-black dark:border-gray-200" />
+            <p>or</p>
+            <hr className="w-1/2 border-black dark:border-gray-200" />
+          </div>
+
+          <div className="mt-5 flex justify-center">
+            <button
+              onClick={onGoogleSignIn}
+              className="w-full py-2 flex items-center justify-center gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01] ease-in-out transform rounded-full text-gray-700 dark:text-gray-300 font-semibold border-2 border-gray-100 dark:border-gray-700"
+            >
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.26644 9.76453C6.19903 6.93863 8.85469 4.90909 12.0002 4.90909C13.6912 4.90909 15.2184 5.50909 16.4184 6.49091L19.9093 3C17.7821 1.14545 15.0548 0 12.0002 0C7.27031 0 3.19799 2.6983 1.24023 6.65002L5.26644 9.76453Z"
+                  fill="#EA4335"
+                />
+                <path
+                  d="M16.0406 18.0142C14.9508 18.718 13.5659 19.0926 11.9998 19.0926C8.86633 19.0926 6.21896 17.0785 5.27682 14.2695L1.2373 17.3366C3.19263 21.2953 7.26484 24.0017 11.9998 24.0017C14.9327 24.0017 17.7352 22.959 19.834 21.0012L16.0406 18.0142Z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M19.8342 20.9978C22.0292 18.9503 23.4545 15.9019 23.4545 11.9982C23.4545 11.2891 23.3455 10.5255 23.1818 9.81641H12V14.4528H18.4364C18.1188 16.0119 17.2663 17.2194 16.0407 18.0108L19.8342 20.9978Z"
+                  fill="#4A90E2"
+                />
+                <path
+                  d="M5.27698 14.2663C5.03833 13.5547 4.90909 12.7922 4.90909 11.9984C4.90909 11.2167 5.03444 10.4652 5.2662 9.76294L1.23999 6.64844C0.436587 8.25884 0 10.0738 0 11.9984C0 13.918 0.444781 15.7286 1.23746 17.3334L5.27698 14.2663Z"
+                  fill="#FBBC05"
+                />
+              </svg>
+              Continue with Google
+            </button>
+          </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400">
+              Already have an account?
+              <Link
+                to="/login"
+                className="text-green-600 dark:text-green-400 font-bold ml-1"
+              >
+                Log in
+              </Link>
+            </p>
+          </div>
+        </div>
+        
+        {/* Right Side - Image (previously on left) */}
+        <div className="hidden md:block w-1/2">
+          <img
+            src="https://i.pinimg.com/736x/fa/a3/39/faa339ad21e99930d8bc8d17bf55fa61.jpg"
+            alt="Wildlife"
+            className="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

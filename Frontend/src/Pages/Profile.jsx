@@ -1,21 +1,32 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { Save, Edit, Camera } from "lucide-react";
-import { UserContext } from "../Context/UserContext";
+import { useAuth } from "../Context/authContext/context"; // Import useAuth
 
 const Profile = () => {
+  const { currentUser, userData, updateUserProfile } = useAuth(); // Get user data and update function
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useContext(UserContext); // Get user details from context
-  const [name, setName] = useState(user?.name || "Guest");
-  const [email, setEmail] = useState(user?.email || "example@example.com");
-
+  const [name, setName] = useState(userData?.name || "");
+  const [email, setEmail] = useState(userData?.email || "");
   const [profile, setProfile] = useState({
-    dob: "",
-    contactNo: "",
-    bio: "",
-    profileImage: user?.profileImage || null,
+    dob: userData?.dob || "",
+    contactNo: userData?.contactNo || "",
+    bio: userData?.bio || "",
+    profileImage: userData?.profileImage || null,
   });
 
   const fileInputRef = useRef(null);
+
+  // Update local state when userData changes
+  useEffect(() => {
+    setName(userData?.name || "");
+    setEmail(userData?.email || "");
+    setProfile({
+      dob: userData?.dob || "",
+      contactNo: userData?.contactNo || "",
+      bio: userData?.bio || "",
+      profileImage: userData?.profileImage || null,
+    });
+  }, [userData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +41,23 @@ const Profile = () => {
         setProfile((prev) => ({ ...prev, profileImage: reader.result }));
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      await updateUserProfile({
+        name: name,
+        email: email,
+        dob: profile.dob,
+        contactNo: profile.contactNo,
+        bio: profile.bio,
+        profileImage: profile.profileImage,
+      });
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
     }
   };
 
@@ -94,7 +122,9 @@ const Profile = () => {
           <div className="md:w-2/3 space-y-6">
             <div className="flex justify-end">
               <button
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={
+                  isEditing ? handleSaveProfile : () => setIsEditing(true)
+                }
                 className="px-4 py-2 bg-green-500 dark:bg-green-700 text-white rounded-lg hover:bg-green-600 dark:hover:bg-green-800 transition"
               >
                 {isEditing ? (

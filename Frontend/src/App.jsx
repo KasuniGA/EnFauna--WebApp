@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,10 +11,8 @@ import Footer from "./Components/Footer";
 import Explore from "./Pages/Explore";
 import AboutUs from "./Pages/AboutUs";
 import Contact from "./Pages/Contact";
-import Gallery from "./Pages/Gallery";
 import Fundpg from "./Pages/Fundpg";
 import Feedpg from "./Pages/Feedpg";
-import Photocontest from "./Pages/Photocontest";
 import Report from "./Pages/Report";
 import Home from "./Pages/Home";
 import Login from "./Auth/Login";
@@ -24,10 +22,10 @@ import Profile from "./Pages/Profile";
 import PhotoUploadForm from "./Pages/PhotoUploadForm";
 import { AuthProvider, useAuth } from "./Context/authContext/context";
 import { UserProvider } from "./Context/UserContext";
-import ErrorBoundary from "./Components/ErrorBoundary"; // Add ErrorBoundary
-import LoadingSpinner from "./Components/LoadingSpinner"; // Add LoadingSpinner
-import ScrollToTop from "./Components/ScrollToTop"; // Add ScrollToTop
-import { Helmet } from "react-helmet"; // For SEO
+import ErrorBoundary from "./Components/ErrorBoundary";
+import ScrollToTop from "./Components/ScrollToTop";
+import Loading from "./Pages/loading"; // Import your Loading page
+import { Helmet } from "react-helmet"; // SEO
 
 // Lazy load heavy components for better performance
 const LazyGallery = React.lazy(() => import("./Pages/Gallery"));
@@ -39,11 +37,21 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 2000); // Simulate loading delay
+  }, []);
+
+  if (isLoading) {
+    return <Loading />; // Show the loading page before the app loads
+  }
+
   return (
     <AuthProvider>
       <UserProvider>
         <Router>
-          {/* SEO and Accessibility */}
+          {/* SEO */}
           <Helmet>
             <title>EnFauna - Wildlife Conservation</title>
             <meta
@@ -65,10 +73,7 @@ function App() {
             />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="https://enfauna.com" />
-            <meta
-              property="og:image"
-              content="https://enfauna.com/logo.png"
-            />
+            <meta property="og:image" content="https://enfauna.com/logo.png" />
           </Helmet>
 
           {/* Scroll Restoration */}
@@ -78,25 +83,18 @@ function App() {
             <Navbar />
             <main className="flex-grow">
               <ErrorBoundary>
-                <Suspense fallback={<LoadingSpinner />}>
+                <Suspense fallback={<Loading />}>
                   <Routes>
                     <Route path="/" element={<Navigate to="/home" replace />} />
                     <Route path="/home" element={<Home />} />
-                    <Route
-                      path="/report"
-                      element={
-                        <ProtectedRoute>
-                          <Report />
-                        </ProtectedRoute>
-                      }
-                    />
+                    <Route path="/report" element={<Report />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/fundpg" element={<Fundpg />} />
                     <Route path="/feedpg" element={<Feedpg />} />
                     <Route
                       path="/photocontest"
                       element={
-                        <Suspense fallback={<LoadingSpinner />}>
+                        <Suspense fallback={<Loading />}>
                           <LazyPhotocontest />
                         </Suspense>
                       }
@@ -107,7 +105,7 @@ function App() {
                     <Route
                       path="/gallery"
                       element={
-                        <Suspense fallback={<LoadingSpinner />}>
+                        <Suspense fallback={<Loading />}>
                           <LazyGallery />
                         </Suspense>
                       }

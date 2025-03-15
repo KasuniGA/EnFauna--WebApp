@@ -7,6 +7,7 @@ import campaignRoutes from "./routes/campaign.route.js";
 import reportRoutes from "./routes/report.route.js";
 import testimonialRoutes from "./routes/testimonial.route.js";
 import spotlightRoutes from "./routes/spotlight.route.js";
+import feedbackRoutes from "./routes/feedback.route.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/campaigns", campaignRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/spotlights", spotlightRoutes);
+app.use("/api", feedbackRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5001;

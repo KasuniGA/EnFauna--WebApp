@@ -11,7 +11,7 @@ const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { userLoggedIn, currentUser } = useAuth();
+  const { userLoggedIn, currentUser, userData } = useAuth(); // Get userData from AuthContext
 
   // Handle scroll effect
   useEffect(() => {
@@ -440,18 +440,28 @@ const Navbar = () => {
               <>
                 <Link to="/profile">
                   <button
-                    className={`px-2 py-2 rounded-full  flex items-center ${
+                    className={`px-2 py-2 rounded-full flex items-center ${
                       scrolled
                         ? darkMode
-                          ? "bg-transparent text-white "
-                          : " text-green-600"
-                        : " text-white"
+                          ? "bg-transparent text-white"
+                          : "text-green-600"
+                        : "text-white"
                     } hover:bg-green-600 hover:text-white`}
                   >
-                    <User size={24} />
-                    {currentUser ? (
-                      <span className="mr-2">{currentUser.email}</span>
-                    ) : null}
+                    {/* Display profile image if available */}
+                    {userData?.profileImage ? (
+                      <img
+                        src={userData.profileImage}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                    ) : (
+                      <User size={24} />
+                    )}
+                    {/* Display user's name */}
+                    <span className="mr-2">
+                      {userData?.name || "Profile"}
+                    </span>
                   </button>
                 </Link>
 

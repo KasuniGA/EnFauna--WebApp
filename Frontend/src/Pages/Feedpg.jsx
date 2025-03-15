@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { Upload, MessageSquare, Star, User, Calendar } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useFeedbackStore } from "../store/feedback.js"; // Adjust the import path as needed
+import VisitorInfoSection from "../Components/Feedback/VisitorInfoSection.jsx";
+import RatingsSection from "../Components/Feedback/Ratings.jsx";
+import FeedbackSection from "../Components/Feedback/FeedbackSection.jsx";
+import { User, Star, MessageSquare } from "lucide-react";
 
 const Feedpg = () => {
+  const { submitFeedback, fetchFeedbacks, feedbacks } = useFeedbackStore();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,8 +25,14 @@ const Feedpg = () => {
     recommendPark: null,
     wantsUpdates: null,
     additionalComments: "",
-    uploadedPhotos: [],
   });
+
+  const [activeSection, setActiveSection] = useState("visitor-info");
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    fetchFeedbacks(); // Fetch feedbacks when the component mounts
+  }, [fetchFeedbacks]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,296 +49,195 @@ const Feedpg = () => {
     }));
   };
 
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setFormData((prevState) => ({
-      ...prevState,
-      uploadedPhotos: files,
-    }));
+  const handleClear = () => {
+    setFormData({
+      name: "",
+      email: "",
+      visitDate: "",
+      visitReason: "",
+      visitCompanions: "",
+      cleanliness: null,
+      staffHelpfulness: null,
+      animalEnclosures: null,
+      educationalInfo: null,
+      foodServices: null,
+      overallSatisfaction: null,
+      mostEnjoyedAspect: "",
+      improvementSuggestions: "",
+      notedIssues: "",
+      recommendPark: null,
+      wantsUpdates: null,
+      additionalComments: "",
+    });
+    setActiveSection("visitor-info");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to a backend
-    console.log("Submitted Feedback:", formData);
-    alert("Thank you for your feedback!");
+
+    const result = await submitFeedback(formData);
+    if (result.success) {
+      setFormSubmitted(true);
+      setTimeout(() => {
+        setFormSubmitted(false);
+        handleClear(); // Clear the form after successful submission
+      }, 3000);
+    } else {
+      alert(`Failed to submit feedback: ${result.message}`);
+    }
   };
 
   return (
-    <div className="max-w-2x mx-auto p-10 bg-green-200 dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 shadow-lg rounded-lg pt-28 pb-16">
-      <h2 className="text-2xl font-bold mb-6 text-center text-green-600">
-        Park Visitor Feedback Form
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Visitor Information */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="relative">
-            <label
-              htmlFor="name"
-              className="mb-2 flex items-center text-gray-900 dark:text-gray-300"
-            >
-              <User className="mr-2 text-gray-500" size={20} />
-              Name (Optional)
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-              placeholder="Your name"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor="email"
-              className="mb-2 flex items-center text-gray-900 dark:text-gray-300"
-            >
-              <MessageSquare className="mr-2 text-gray-500" size={20} />
-              Email (Optional)
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-              placeholder="Your email"
-            />
-          </div>
-          <div className="relative">
-            <label
-              htmlFor="visitDate"
-              className="mb-2 flex items-center text-gray-900 dark:text-gray-300"
-            >
-              <Calendar className="mr-2 text-gray-500" size={20} />
-              Date of Visit
-            </label>
-            <input
-              type="date"
-              id="visitDate"
-              name="visitDate"
-              value={formData.visitDate}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Visit Details */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="visitReason"
-              className="block mb-2 text-gray-900 dark:text-gray-300"
-            >
-              Reason for Visit
-            </label>
-            <select
-              id="visitReason"
-              name="visitReason"
-              value={formData.visitReason}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-              required
-            >
-              <option value="">Select Reason</option>
-              <option value="leisure">Leisure</option>
-              <option value="education">Education</option>
-              <option value="photography">Photography</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="visitCompanions"
-              className="block mb-2 text-gray-900 dark:text-gray-300"
-            >
-              Visited With
-            </label>
-            <select
-              id="visitCompanions"
-              name="visitCompanions"
-              value={formData.visitCompanions}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-              required
-            >
-              <option value="">Select Companions</option>
-              <option value="family">Family</option>
-              <option value="friends">Friends</option>
-              <option value="solo">Solo</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Experience Ratings */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold flex items-center text-gray-900 dark:text-gray-300">
-            <Star className="mr-2 text-orange-400" size={24} />
-            Experience Ratings
-          </h3>
-
-          {[
-            { key: "cleanliness", label: "Cleanliness of the Park" },
-            { key: "staffHelpfulness", label: "Staff Helpfulness" },
-            { key: "animalEnclosures", label: "Animal Enclosures" },
-            { key: "educationalInfo", label: "Educational Information" },
-            { key: "foodServices", label: "Food and Beverage Services" },
-            { key: "overallSatisfaction", label: "Overall Satisfaction" },
-          ].map(({ key, label }) => (
-            <div
-              key={key}
-              className="flex items-center text-gray-900 dark:text-gray-300"
-            >
-              <label className="mr-4 w-1/3">{label}</label>
-              <div className="flex space-x-1">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <Star
-                    key={rating}
-                    size={24}
-                    className={`cursor-pointer ${
-                      formData[key] >= rating
-                        ? "text-orange-400"
-                        : "text-gray-400"
-                    }`}
-                    onClick={() => handleStarClick(key, rating)}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Open-ended Questions */}
-        <div className="space-y-4 ">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-300">
-            Your Feedback
-          </h3>
-          {[
-            { key: "mostEnjoyedAspect", label: "What did you enjoy the most?" },
-            { key: "improvementSuggestions", label: "What could we improve?" },
-            { key: "notedIssues", label: "Did you notice any issues?" },
-          ].map(({ key, label }) => (
-            <div key={key}>
-              <label
-                htmlFor={key}
-                className="block mb-2 text-gray-900 dark:text-gray-300"
+    <div
+      className="bg-cover bg-center dark:opacity-75 min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800 py-10 sm:py-20 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage:
+          "url(https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/344013427_704551598026711_7149305102349311147_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH_c5EoGvjoPI4kJkjYnk0YOwhgJwBfecI7CGAnAF95wggMSCVDWsPEhtrn5rE7TU0ToTMvN8CDz1uYMC4myh8A&_nc_ohc=mXAGBthEN0MQ7kNvgEQcwAt&_nc_oc=AdiUCAVWIb7zAbqkQpzeOVY3BhVoq-zXoPrnvf_inMHdoBPTY1sFFM6v6squlVUAOik&_nc_zt=23&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=jYhFfnr3qEa5JqctkDVxiw&oh=00_AYHDJvcxkETzB-8h999MTLqfgpa15IdrVJ82n7fdSHE95Q&oe=67DBD69E)",
+      }}
+    >
+      <div className="max-w-4xl mx-auto">
+        {formSubmitted ? (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 sm:p-12 text-center transform transition-all duration-500 animate-pulse">
+            <div className="w-16 h-16 sm:w-24 sm:h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 sm:h-12 sm:w-12 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                {label}
-              </label>
-              <textarea
-                id={key}
-                name={key}
-                value={formData[key]}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-                rows="3"
-              />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             </div>
-          ))}
-        </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400 mb-2 sm:mb-4">
+              Thank You!
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300">
+              Your feedback helps us improve the park experience for everyone.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+            {/* Header with decorative image */}
+            <div className="relative h-32 sm:h-48 bg-green-600 overflow-hidden">
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-80"
+                style={{
+                  backgroundImage:
+                    "url(https://i.pinimg.com/736x/cc/44/7e/cc447e273711c8fae6275904056d9347.jpg)",
+                }}
+              ></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-600/90 to-green-800/90"></div>
+              <div className="relative h-full flex items-center justify-center px-4 sm:px-8">
+                <h1 className="text-2xl sm:text-4xl font-bold text-white text-center">
+                  Park Visitor Feedback
+                </h1>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-white dark:from-gray-800 to-transparent"></div>
+            </div>
 
-        {/* Visitor Engagement */}
-        <div className="grid md:grid-cols-2 gap-4 text-gray-900 dark:text-gray-300">
-          <div>
-            <label className="block mb-2">Would you recommend our park?</label>
-            <div className="flex space-x-4">
-              <label className="inline-flex items-center text-gray-900 dark:text-gray-300">
-                <input
-                  type="radio"
-                  name="recommendPark"
-                  value="yes"
-                  checked={formData.recommendPark === "yes"}
-                  onChange={() =>
-                    setFormData((prev) => ({ ...prev, recommendPark: "yes" }))
-                  }
-                  className="form-radio"
+            {/* Tabs Navigation */}
+            <div className="flex overflow-x-auto py-3 sm:py-4 px-4 sm:px-6 bg-green-50 dark:bg-gray-700 border-b border-green-100 dark:border-gray-600">
+              <button
+                onClick={() => setActiveSection("visitor-info")}
+                className={`flex items-center px-3 py-1 sm:px-4 sm:py-2 mr-2 sm:mr-4 rounded-lg font-medium text-sm sm:text-base transition ${
+                  activeSection === "visitor-info"
+                    ? "bg-green-600 text-white shadow-md"
+                    : "bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-500"
+                }`}
+              >
+                <User size={16} className="mr-1 sm:mr-2" />
+                Visitor Info
+              </button>
+              <button
+                onClick={() => setActiveSection("ratings")}
+                className={`flex items-center px-3 py-1 sm:px-4 sm:py-2 mr-2 sm:mr-4 rounded-lg font-medium text-sm sm:text-base transition ${
+                  activeSection === "ratings"
+                    ? "bg-green-600 text-white shadow-md"
+                    : "bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-500"
+                }`}
+              >
+                <Star size={16} className="mr-1 sm:mr-2" />
+                Ratings
+              </button>
+              <button
+                onClick={() => setActiveSection("feedback")}
+                className={`flex items-center px-3 py-1 sm:px-4 sm:py-2 mr-2 sm:mr-4 rounded-lg font-medium text-sm sm:text-base transition ${
+                  activeSection === "feedback"
+                    ? "bg-green-600 text-white shadow-md"
+                    : "bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-500"
+                }`}
+              >
+                <MessageSquare size={16} className="mr-1 sm:mr-2" />
+                Your Comments
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-4 sm:p-8">
+              {/* Conditionally render the active section */}
+              {activeSection === "visitor-info" && (
+                <VisitorInfoSection
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  setActiveSection={setActiveSection}
                 />
-                <span className="ml-2">Yes</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="recommendPark"
-                  value="no"
-                  checked={formData.recommendPark === "no"}
-                  onChange={() =>
-                    setFormData((prev) => ({ ...prev, recommendPark: "no" }))
-                  }
-                  className="form-radio "
+              )}
+
+              {activeSection === "ratings" && (
+                <RatingsSection
+                  formData={formData}
+                  handleStarClick={handleStarClick}
+                  setActiveSection={setActiveSection}
                 />
-                <span className="ml-2">No</span>
-              </label>
+              )}
+
+              {activeSection === "feedback" && (
+                <FeedbackSection
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  setActiveSection={setActiveSection}
+                  handleClear={handleClear}
+                  handleSubmit={handleSubmit}
+                />
+              )}
+            </form>
+          </div>
+        )}
+
+        {/* Progress indicator - only shown when not submitted */}
+        {!formSubmitted && (
+          <div className="mt-4 sm:mt-6 px-4 flex justify-center">
+            <div className="flex items-center space-x-2">
+              <div
+                className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${
+                  activeSection === "visitor-info"
+                    ? "bg-green-500"
+                    : "bg-gray-300 dark:bg-gray-600"
+                }`}
+              ></div>
+              <div
+                className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${
+                  activeSection === "ratings"
+                    ? "bg-green-500"
+                    : "bg-gray-300 dark:bg-gray-600"
+                }`}
+              ></div>
+              <div
+                className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${
+                  activeSection === "feedback"
+                    ? "bg-green-500"
+                    : "bg-gray-300 dark:bg-gray-600"
+                }`}
+              ></div>
             </div>
           </div>
-          <div>
-            <label className="block mb-2">Want park updates?</label>
-            <div className="flex space-x-4">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="wantsUpdates"
-                  value="yes"
-                  checked={formData.wantsUpdates === "yes"}
-                  onChange={() =>
-                    setFormData((prev) => ({ ...prev, wantsUpdates: "yes" }))
-                  }
-                  className="form-radio "
-                />
-                <span className="ml-2">Yes</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="wantsUpdates"
-                  value="no"
-                  checked={formData.wantsUpdates === "no"}
-                  onChange={() =>
-                    setFormData((prev) => ({ ...prev, wantsUpdates: "no" }))
-                  }
-                  className="form-radio"
-                />
-                <span className="ml-2">No</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Feedback */}
-        <div>
-          <label
-            htmlFor="additionalComments"
-            className="block mb-2 text-gray-900 dark:text-gray-300"
-          >
-            Additional Comments
-          </label>
-          <textarea
-            id="additionalComments"
-            name="additionalComments"
-            value={formData.additionalComments}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded border-gray-100 dark:border-gray-700 mt-1 bg-transparent dark:bg-gray-800 text-gray-900 dark:text-gray-300"
-            rows="4"
-            placeholder="Any other thoughts or suggestions?"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="text-center mt-6">
-          <button
-            type="submit"
-            className="bg-green-600 text-white px-6 py-3 rounded-3xl hover:bg-green-700 transition duration-300"
-          >
-            Submit Feedback
-          </button>
-        </div>
-      </form>
+        )}
+      </div>
     </div>
   );
 };

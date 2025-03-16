@@ -23,11 +23,21 @@ export function AuthProvider({ children }) {
   const [isGoogleUser, setIsGoogleUser] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null); // Additional user data from Firestore
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return unsubscribe;
   }, []);
+
+  // Example: Updating profile data
+  const handleProfileUpdate = async (updatedData) => {
+    try {
+      await updateUserProfile(updatedData);
+      console.log("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error.message);
+    }
+  };
 
   async function initializeUser(user) {
     if (user) {
@@ -70,7 +80,7 @@ export function AuthProvider({ children }) {
         password
       );
       setCurrentUser(userCredential.user);
-      setUserLoggedIn(true);
+      setUserLoggedIn(true); // Ensure this is set to true
 
       // Fetch additional user data from Firestore
       const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
@@ -105,13 +115,13 @@ export function AuthProvider({ children }) {
           createdAt: new Date(),
         });
       } else {
-        // If the user exists, merge the existing data with the new data
+        // If the user exists, only update the fields that are not already set
         await setDoc(
           doc(db, "users", user.uid),
           {
-            name: user.displayName,
-            email: user.email,
-            profileImage: user.photoURL || userDoc.data().profileImage, // Keep existing profile image if no Google photo
+            name: userDoc.data().name || user.displayName, // Keep existing name if available
+            email: userDoc.data().email || user.email, // Keep existing email if available
+            profileImage: userDoc.data().profileImage || user.photoURL, // Keep existing profile image if available
           },
           { merge: true } // Merge the data instead of overwriting
         );

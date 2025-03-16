@@ -74,7 +74,9 @@ const Feedpg = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Form Data Submitted:", formData);
+    // Add your form submission logic here
+  
     const result = await submitFeedback(formData);
     if (result.success) {
       setFormSubmitted(true);
@@ -197,13 +199,14 @@ const Feedpg = () => {
               )}
 
               {activeSection === "feedback" && (
-                <FeedbackSection
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                  setActiveSection={setActiveSection}
-                  handleClear={handleClear}
-                  handleSubmit={handleSubmit}
-                />
+               <FeedbackSection
+               formData={formData}
+               handleInputChange={handleInputChange}
+               setActiveSection={setActiveSection}
+               handleClear={handleClear}
+               handleSubmit={handleSubmit}
+               setFormData={setFormData} // Pass setFormData as a prop
+             />
               )}
             </form>
           </div>

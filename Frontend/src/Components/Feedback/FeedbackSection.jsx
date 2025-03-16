@@ -7,6 +7,7 @@ const FeedbackSection = ({
   setActiveSection,
   handleClear,
   handleSubmit,
+  setFormData, // Ensure setFormData is passed as a prop
 }) => {
   return (
     <div>
@@ -72,10 +73,10 @@ const FeedbackSection = ({
                       name="recommendPark"
                       value="yes"
                       checked={formData.recommendPark === "yes"}
-                      onChange={() =>
+                      onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          recommendPark: "yes",
+                          recommendPark: e.target.value,
                         }))
                       }
                       className="sr-only peer"
@@ -107,10 +108,10 @@ const FeedbackSection = ({
                       name="recommendPark"
                       value="no"
                       checked={formData.recommendPark === "no"}
-                      onChange={() =>
+                      onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          recommendPark: "no",
+                          recommendPark: e.target.value,
                         }))
                       }
                       className="sr-only peer"
@@ -150,10 +151,10 @@ const FeedbackSection = ({
                       name="wantsUpdates"
                       value="yes"
                       checked={formData.wantsUpdates === "yes"}
-                      onChange={() =>
+                      onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          wantsUpdates: "yes",
+                          wantsUpdates: e.target.value,
                         }))
                       }
                       className="sr-only peer"
@@ -185,10 +186,10 @@ const FeedbackSection = ({
                       name="wantsUpdates"
                       value="no"
                       checked={formData.wantsUpdates === "no"}
-                      onChange={() =>
+                      onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          wantsUpdates: "no",
+                          wantsUpdates: e.target.value,
                         }))
                       }
                       className="sr-only peer"

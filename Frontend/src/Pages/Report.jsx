@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Camera, Upload, AlertCircle, UserCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import GMap from "../Components/GMap";
+import GMap from "../Components/Report/GMap";
 import { useReportStore } from "../store/report.store";
 import Statustracking from "../Components/Report/Statustracking";
 import Toast from "../Components/Toast";

@@ -6,8 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
+import Navbar from "./common/Navbar";
+import Footer from "./common/Footer";
 import Explore from "./Pages/Explore";
 import AboutUs from "./Pages/AboutUs";
 import Contact from "./Pages/Contact";
@@ -22,8 +22,8 @@ import Profile from "./Pages/Profile";
 import PhotoUploadForm from "./Pages/PhotoUploadForm";
 import { AuthProvider, useAuth } from "./Context/authContext/context";
 import { UserProvider } from "./Context/UserContext";
-import ErrorBoundary from "./Components/ErrorBoundary";
-import ScrollToTop from "./Components/ScrollToTop";
+import ErrorBoundary from "./common/ErrorBoundary";
+import ScrollToTop from "./common/ScrollToTop";
 import Loading from "./Pages/loading"; // Import your Loading page
 import { Helmet } from "react-helmet"; // SEO
 
@@ -99,7 +99,10 @@ function App() {
                         </Suspense>
                       }
                     />
-                    <Route path="/photouploadform" element={<PhotoUploadForm />} />
+                    <Route
+                      path="/photouploadform"
+                      element={<PhotoUploadForm />}
+                    />
                     <Route path="/about-us" element={<AboutUs />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route

@@ -13,6 +13,8 @@ const Profile = () => {
     bio: userData?.bio || "",
     profileImage: userData?.profileImage || null,
   });
+  const [error, setError] = useState(""); // For error messages
+  const [isLoading, setIsLoading] = useState(false); // For loading state
 
   const fileInputRef = useRef(null);
 
@@ -45,6 +47,14 @@ const Profile = () => {
   };
 
   const handleSaveProfile = async () => {
+    if (!currentUser) {
+      setError("No user is logged in.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
     try {
       await updateUserProfile({
         name: name,
@@ -58,6 +68,9 @@ const Profile = () => {
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile:", error);
+      setError("Failed to update profile. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,14 +139,23 @@ const Profile = () => {
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
                 className="px-4 py-2 bg-green-500 dark:bg-green-700 text-white rounded-lg hover:bg-green-600 dark:hover:bg-green-800 transition"
+                disabled={isLoading}
               >
-                {isEditing ? (
+                {isLoading ? (
+                  "Saving..."
+                ) : isEditing ? (
                   <Save className="w-5 h-5" />
                 ) : (
                   <Edit className="w-5 h-5" />
                 )}
               </button>
             </div>
+
+            {error && (
+              <p className="text-red-500 dark:text-red-400 text-center">
+                {error}
+              </p>
+            )}
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>

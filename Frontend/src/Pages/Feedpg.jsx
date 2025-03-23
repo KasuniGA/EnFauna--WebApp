@@ -76,7 +76,7 @@ const Feedpg = () => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
     // Add your form submission logic here
-  
+
     const result = await submitFeedback(formData);
     if (result.success) {
       setFormSubmitted(true);
@@ -91,7 +91,7 @@ const Feedpg = () => {
 
   return (
     <div
-      className="bg-cover bg-center dark:opacity-75 min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800 py-10 sm:py-20 px-4 sm:px-6 lg:px-8"
+      className="bg-cover bg-center dark:opacity-75 min-h-screen bg-gradient-to-b from-green-100 to-green-10200 dark:from-gray-900 dark:to-gray-800 py-10 sm:py-20 px-4 sm:px-6 lg:px-8"
       style={{
         backgroundImage:
           "url(https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/344013427_704551598026711_7149305102349311147_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH_c5EoGvjoPI4kJkjYnk0YOwhgJwBfecI7CGAnAF95wggMSCVDWsPEhtrn5rE7TU0ToTMvN8CDz1uYMC4myh8A&_nc_ohc=mXAGBthEN0MQ7kNvgEQcwAt&_nc_oc=AdiUCAVWIb7zAbqkQpzeOVY3BhVoq-zXoPrnvf_inMHdoBPTY1sFFM6v6squlVUAOik&_nc_zt=23&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=jYhFfnr3qEa5JqctkDVxiw&oh=00_AYHDJvcxkETzB-8h999MTLqfgpa15IdrVJ82n7fdSHE95Q&oe=67DBD69E)",
@@ -199,14 +199,14 @@ const Feedpg = () => {
               )}
 
               {activeSection === "feedback" && (
-               <FeedbackSection
-               formData={formData}
-               handleInputChange={handleInputChange}
-               setActiveSection={setActiveSection}
-               handleClear={handleClear}
-               handleSubmit={handleSubmit}
-               setFormData={setFormData} // Pass setFormData as a prop
-             />
+                <FeedbackSection
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                  setActiveSection={setActiveSection}
+                  handleClear={handleClear}
+                  handleSubmit={handleSubmit}
+                  setFormData={setFormData} // Pass setFormData as a prop
+                />
               )}
             </form>
           </div>

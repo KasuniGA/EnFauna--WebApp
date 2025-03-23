@@ -27,29 +27,40 @@ const IncidentReportForm = () => {
     setShowToast(true);
   };
 
-  const handleFileUpload = (e, type) => {
-    const files = Array.from(e.target.files);
+  const handleFileUpload = async (event, type) => {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
 
-    // Validate file types and sizes
-    const validFiles = files.filter((file) => {
-      if (type === "uploadedPhotos") {
-        return file.type.startsWith("image/") && file.size <= 15 * 1024 * 1024; // 15MB
-      } else if (type === "uploadedVideos") {
-        return file.type.startsWith("video/") && file.size <= 50 * 1024 * 1024; // 50MB
-      }
-      return false;
-    });
+    const isImage = type === "uploadedPhotos";
+    const uploadPreset = isImage ? "images_presets" : "videos_presets";
+    const cloudinaryURL = `https://api.cloudinary.com/v1_1/dqyone0du/${
+      isImage ? "image" : "video"
+    }/upload`;
 
-    if (validFiles.length !== files.length) {
-      showToastMessage(
-        "Invalid File",
-        "Please upload valid image (JPG, PNG) or video (MP4) files under 15MB and 50MB respectively."
-      );
-    }
+    const updatedFiles = await Promise.all(
+      files.map(async (file) => {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", uploadPreset);
+
+        try {
+          const res = await fetch(cloudinaryURL, {
+            method: "POST",
+            body: data,
+          });
+
+          const result = await res.json();
+          return result.secure_url; // Return the uploaded file URL
+        } catch (error) {
+          console.error("Upload failed:", error);
+          return null;
+        }
+      })
+    );
 
     setFormData((prevState) => ({
       ...prevState,
-      [type]: [...prevState[type], ...validFiles],
+      [type]: [...prevState[type], ...updatedFiles.filter((url) => url)],
     }));
   };
 
@@ -67,7 +78,7 @@ const IncidentReportForm = () => {
       date: e.target.elements["date"].value,
       time: e.target.elements["time"].value,
       priority: e.target.elements["priority"].value,
-      isAnonymous,
+      isAnonymous: isAnonymous,
       longitude: location.longitude,
       latitude: location.latitude,
     };
@@ -104,15 +115,17 @@ const IncidentReportForm = () => {
         formDataToSend.append(key, reportData[key]);
       });
 
-      // Append files if any
-      formData.uploadedPhotos.forEach((photo) => {
-        formDataToSend.append("photos", photo);
+      // Append photos
+      formData.uploadedPhotos.forEach((photo, index) => {
+        formDataToSend.append(`photos[${index}]`, photo);
       });
 
-      formData.uploadedVideos.forEach((video) => {
-        formDataToSend.append("videos", video);
+      // Append videos
+      formData.uploadedVideos.forEach((video, index) => {
+        formDataToSend.append(`videos[${index}]`, video);
       });
 
+      // Send the report data to the backend
       const response = await createReport(formDataToSend);
 
       if (response.success) {
@@ -125,8 +138,17 @@ const IncidentReportForm = () => {
         e.target.reset();
         setFormData({ uploadedPhotos: [], uploadedVideos: [] });
         setLocation({ latitude: null, longitude: null });
+
+        // Show submission message for 5 seconds
+        setShowSubmissionMessage(true);
+        setTimeout(() => {
+          setShowSubmissionMessage(false);
+        }, 5000);
       } else {
-        showToastMessage("Error", response.message || "Failed to submit report.");
+        showToastMessage(
+          "Error",
+          response.message || "Failed to submit report."
+        );
       }
     } catch (error) {
       console.error("Error:", error);

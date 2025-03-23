@@ -22,18 +22,13 @@ export const createReport = async (req, res) => {
     name,
     contact,
     priority,
+    longitude,
+    latitude,
   } = req.body;
 
-  // Extract location coordinates from the request
-  const { longitude, latitude } = req.body;
-
- // Handle file uploads
- const photos = req.files?.photos
- ? req.files.photos.map((file) => `/Images/${file.filename}`)
- : [];
-const videos = req.files?.videos
- ? req.files.videos.map((file) => `/Images/${file.filename}`)
- : [];
+  // Extract photos and videos from the request body
+  const photos = req.body.photos || [];
+  const videos = req.body.videos || [];
 
   // Validate required fields
   if (

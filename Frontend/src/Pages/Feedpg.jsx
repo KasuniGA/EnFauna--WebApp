@@ -31,7 +31,7 @@ const Feedpg = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
-    fetchFeedbacks(); // Fetch feedbacks when the component mounts
+    fetchFeedbacks();
   }, [fetchFeedbacks]);
 
   const handleInputChange = (e) => {
@@ -75,14 +75,12 @@ const Feedpg = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
-    // Add your form submission logic here
-
     const result = await submitFeedback(formData);
     if (result.success) {
       setFormSubmitted(true);
       setTimeout(() => {
         setFormSubmitted(false);
-        handleClear(); // Clear the form after successful submission
+        handleClear();
       }, 3000);
     } else {
       alert(`Failed to submit feedback: ${result.message}`);
@@ -90,14 +88,33 @@ const Feedpg = () => {
   };
 
   return (
-    <div
-      className="bg-cover bg-center dark:opacity-75 min-h-screen bg-gradient-to-b from-green-100 to-green-10200 dark:from-gray-900 dark:to-gray-800 py-10 sm:py-20 px-4 sm:px-6 lg:px-8"
-      style={{
-        backgroundImage:
-          "url(https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/344013427_704551598026711_7149305102349311147_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeH_c5EoGvjoPI4kJkjYnk0YOwhgJwBfecI7CGAnAF95wggMSCVDWsPEhtrn5rE7TU0ToTMvN8CDz1uYMC4myh8A&_nc_ohc=mXAGBthEN0MQ7kNvgEQcwAt&_nc_oc=AdiUCAVWIb7zAbqkQpzeOVY3BhVoq-zXoPrnvf_inMHdoBPTY1sFFM6v6squlVUAOik&_nc_zt=23&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=jYhFfnr3qEa5JqctkDVxiw&oh=00_AYHDJvcxkETzB-8h999MTLqfgpa15IdrVJ82n7fdSHE95Q&oe=67DBD69E)",
-      }}
-    >
-      <div className="max-w-4xl mx-auto">
+    <div className="relative min-h-screen py-10 sm:py-20 px-4 sm:px-6 lg:px-8">
+      {/* Background image with overlay for light/dark mode */}
+      <div
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1553514029-d1b8c8a7df79?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80)",
+        }}
+      ></div>
+      {/* <div className="absolute inset-0 bg-gradient-to-bl from-green-200 via-green-300 to-green-400 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 z-0"></div> */}
+
+      <div
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{
+          backgroundImage: `
+      linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.3)
+      ),
+      url('https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/486327085_3194516987395804_696508427646766679_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFXmUVgq3Q_wuAjEvM1s7HbiVD8xjObqDuJUPzGM5uoO8tXFZHOOGAwqOeks2Qe_UGdg_F6CJPfEQAlr2STo_Ej&_nc_ohc=GxNhiaSsipIQ7kNvwFae1py&_nc_oc=Adm6U2B5Iz3dFa8IXMeyXri_HTpBcLfi1gPG4RSzJpnbO5RNxca9TleMwrm285MVm9I&_nc_zt=23&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=CPS5AmfiBoblsuppYZZGtw&oh=00_AfHMBnqVYtt1AurcJZT5GT5ZLACOoRAXxazJ7-JC6q6s5Q&oe=67F81FB3')
+    `,
+          backgroundBlendMode: "overlay",
+        }}
+      ></div>
+
+      <div className="relative max-w-4xl mx-auto z-10">
         {formSubmitted ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 sm:p-12 text-center transform transition-all duration-500 animate-pulse">
             <div className="w-16 h-16 sm:w-24 sm:h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
@@ -125,7 +142,7 @@ const Feedpg = () => {
           </div>
         ) : (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-            {/* Header with decorative image */}
+            {/* Header */}
             <div className="relative h-32 sm:h-48 bg-green-600 overflow-hidden">
               <div
                 className="absolute inset-0 bg-cover bg-center opacity-80"
@@ -143,7 +160,7 @@ const Feedpg = () => {
               <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-white dark:from-gray-800 to-transparent"></div>
             </div>
 
-            {/* Tabs Navigation */}
+            {/* Tabs */}
             <div className="flex overflow-x-auto py-3 sm:py-4 px-4 sm:px-6 bg-green-50 dark:bg-gray-700 border-b border-green-100 dark:border-gray-600">
               <button
                 onClick={() => setActiveSection("visitor-info")}
@@ -181,7 +198,6 @@ const Feedpg = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="p-4 sm:p-8">
-              {/* Conditionally render the active section */}
               {activeSection === "visitor-info" && (
                 <VisitorInfoSection
                   formData={formData}
@@ -205,14 +221,13 @@ const Feedpg = () => {
                   setActiveSection={setActiveSection}
                   handleClear={handleClear}
                   handleSubmit={handleSubmit}
-                  setFormData={setFormData} // Pass setFormData as a prop
+                  setFormData={setFormData}
                 />
               )}
             </form>
           </div>
         )}
 
-        {/* Progress indicator - only shown when not submitted */}
         {!formSubmitted && (
           <div className="mt-4 sm:mt-6 px-4 flex justify-center">
             <div className="flex items-center space-x-2">

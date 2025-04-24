@@ -93,13 +93,18 @@ const Feedpg = () => {
       <div
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1553514029-d1b8c8a7df79?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80)",
+          backgroundImage: `
+        
+        url('https://i.pinimg.com/736x/a1/e5/0e/a1e50ed5d6f9873a55326da81bda9d2e.jpg')
+      `,
+          filter: "blur(8px)",
+          backgroundBlendMode: "overlay",
+          
         }}
       ></div>
       {/* <div className="absolute inset-0 bg-gradient-to-bl from-green-200 via-green-300 to-green-400 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 z-0"></div> */}
 
-      <div
+      {/* <div
         className="absolute inset-0 bg-cover bg-center z-0"
         style={{
           backgroundImage: `
@@ -112,7 +117,7 @@ const Feedpg = () => {
     `,
           backgroundBlendMode: "overlay",
         }}
-      ></div>
+      ></div> */}
 
       <div className="relative max-w-4xl mx-auto z-10">
         {formSubmitted ? (

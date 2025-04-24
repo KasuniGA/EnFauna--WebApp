@@ -20,6 +20,7 @@ export const useDonationStore = create((set) => ({
       },
       body: JSON.stringify(newDonation),
     });
+
     const data = await res.json();
     set((state) => ({ donations: [...state.donations, data.data] }));
     return { success: true, message: "Donation created successfully" };
@@ -29,6 +30,7 @@ export const useDonationStore = create((set) => ({
     const data = await res.json();
     set({ donations: data.data });
   },
+  
   deleteDonation: async (pid) => {
     const res = await fetch(`/api/donations/${pid}`, {
       method: "DELETE",

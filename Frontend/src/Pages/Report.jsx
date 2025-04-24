@@ -138,21 +138,19 @@ const IncidentReportForm = () => {
         e.target.reset();
         setFormData({ uploadedPhotos: [], uploadedVideos: [] });
         setLocation({ latitude: null, longitude: null });
-
-        // Show submission message for 5 seconds
-        setShowSubmissionMessage(true);
-        setTimeout(() => {
-          setShowSubmissionMessage(false);
-        }, 5000);
       } else {
+        // This is where we'll show the error from the image
         showToastMessage(
           "Error",
-          response.message || "Failed to submit report."
+          "Failed to submit report. Please try again." // Exact message from image
         );
       }
     } catch (error) {
       console.error("Error:", error);
-      showToastMessage("Error", "Failed to submit report. Please try again.");
+      showToastMessage(
+        "Error",
+        "Failed to submit report. Please try again." // Same message for consistency
+      );
     } finally {
       setIsSubmitting(false);
     }

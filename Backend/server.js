@@ -8,6 +8,7 @@ import reportRoutes from "./routes/report.route.js";
 import testimonialRoutes from "./routes/testimonial.route.js";
 import spotlightRoutes from "./routes/spotlight.route.js";
 import feedbackRoutes from "./routes/feedback.route.js";
+import photoRouter from "./routes/upload.route.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/spotlights", spotlightRoutes);
 app.use("/api", feedbackRoutes);
+app.use("/api/photos", photoRouter);
 
 // Start server
 const PORT = process.env.PORT || 5001;

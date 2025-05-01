@@ -1,14 +1,17 @@
 import { create } from "zustand";
 
-export const usePhotoStore = create((set) => ({
+export const usePhotoStore = create((set, get) => ({
   photos: [],
+  currentUser: null, // This would be set from your auth system
+
+  setCurrentUser: (user) => set({ currentUser: user }),
+
   setPhotos: (photos) => set({ photos }),
 
   uploadPhoto: async (photoData) => {
     try {
       console.log("Uploading photo with data:", photoData);
 
-      // Send as JSON instead of FormData
       const res = await fetch("http://localhost:5001/api/photos", {
         method: "POST",
         headers: {
@@ -17,7 +20,6 @@ export const usePhotoStore = create((set) => ({
         body: JSON.stringify(photoData),
       });
 
-      // Log response status for debugging
       console.log("Upload response status:", res.status);
 
       if (!res.ok) {
@@ -54,11 +56,145 @@ export const usePhotoStore = create((set) => ({
         return { success: false, message: data.message };
       }
 
-      set({ photos: data.data });
+      // Ensure each photo has the expected structure
+      const safePhotos = data.data.map((photo) => ({
+        ...photo,
+        likes: photo.likes || { count: 0, users: [] },
+        comments: photo.comments || [],
+      }));
+
+      set({ photos: safePhotos });
       return { success: true, message: "Photos fetched successfully" };
     } catch (error) {
       console.error("Error fetching photos:", error);
       return { success: false, message: "Error fetching photos" };
+    }
+  },
+
+  likePhoto: async (photoId) => {
+    try {
+      const { currentUser } = get();
+
+      if (!currentUser || !currentUser.id) {
+        return {
+          success: false,
+          message: "You must be logged in to like photos",
+        };
+      }
+
+      const res = await fetch(
+        `http://localhost:5001/api/photos/${photoId}/like`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: currentUser.id }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        return { success: false, message: data.message };
+      }
+
+      // Update the photo in the store
+      set((state) => ({
+        photos: state.photos.map((photo) =>
+          photo._id === photoId ? data.data : photo
+        ),
+      }));
+
+      return { success: true, message: "Photo liked successfully" };
+    } catch (error) {
+      console.error("Error liking photo:", error);
+      return { success: false, message: "Error liking photo" };
+    }
+  },
+
+  unlikePhoto: async (photoId) => {
+    try {
+      const { currentUser } = get();
+
+      if (!currentUser || !currentUser.id) {
+        return {
+          success: false,
+          message: "You must be logged in to unlike photos",
+        };
+      }
+
+      const res = await fetch(
+        `http://localhost:5001/api/photos/${photoId}/unlike`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: currentUser.id }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        return { success: false, message: data.message };
+      }
+
+      // Update the photo in the store
+      set((state) => ({
+        photos: state.photos.map((photo) =>
+          photo._id === photoId ? data.data : photo
+        ),
+      }));
+
+      return { success: true, message: "Photo unliked successfully" };
+    } catch (error) {
+      console.error("Error unliking photo:", error);
+      return { success: false, message: "Error unliking photo" };
+    }
+  },
+
+  addComment: async (photoId, text) => {
+    try {
+      const { currentUser } = get();
+
+      if (!currentUser || !currentUser.id) {
+        return { success: false, message: "You must be logged in to comment" };
+      }
+
+      const res = await fetch(
+        `http://localhost:5001/api/photos/${photoId}/comment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            userName: currentUser.name,
+            text,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        return { success: false, message: data.message };
+      }
+
+      // Update the photo in the store
+      set((state) => ({
+        photos: state.photos.map((photo) =>
+          photo._id === photoId ? data.data : photo
+        ),
+      }));
+
+      return { success: true, message: "Comment added successfully" };
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      return { success: false, message: "Error adding comment" };
     }
   },
 
@@ -82,5 +218,20 @@ export const usePhotoStore = create((set) => ({
       console.error("Error deleting photo:", error);
       return { success: false, message: "Error deleting photo" };
     }
+  },
+
+  // Helper function to check if current user has liked a photo
+  hasUserLikedPhoto: (photoId) => {
+    const { photos, currentUser } = get();
+
+    if (!currentUser || !currentUser.id) return false;
+
+    const photo = photos.find((p) => p._id === photoId);
+    if (!photo) return false;
+
+    // Add safety check for likes property
+    if (!photo.likes || !photo.likes.users) return false;
+
+    return photo.likes.users.includes(currentUser.id);
   },
 }));

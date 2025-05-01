@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   doSignInWithEmailAndPassword,
   doSignInWithGoogle,
+  doPasswordReset,
 } from "../../../Backend/Auth/auth";
 import { useAuth } from "../Context/authContext/context";
 
@@ -55,6 +56,20 @@ export default function Login() {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setErrorMessage("Please enter your email address first.");
+      return;
+    }
+
+    try {
+      await doPasswordReset(email);
+      alert("Password reset email sent! Please check your inbox.");
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   };
 
   return (
@@ -160,9 +175,12 @@ export default function Login() {
             </div>
 
             <div className="text-right mb-5">
-              <a href="#" className="text-gray-500 dark:text-gray-400 text-sm">
+              <Link
+                to="/forgot-password"
+                className="text-gray-500 dark:text-gray-400 text-sm"
+              >
                 Forgot Password?
-              </a>
+              </Link>
             </div>
 
             {errorMessage && (

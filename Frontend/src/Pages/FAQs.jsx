@@ -58,7 +58,7 @@ const FAQs = () => {
   );
 
   return (
-    <div className="min-h-screen bg-green-50 dark:bg-gray-900 p-6 pt-24">
+    <div className="min-h-screen bg-green-200 dark:bg-gray-900 p-6 pt-24">
       <div className="container mx-auto max-w-4xl">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-green-800 dark:text-white mb-4">FAQs and Resources</h1>

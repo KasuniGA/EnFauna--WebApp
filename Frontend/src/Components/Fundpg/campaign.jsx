@@ -1,22 +1,37 @@
-import React from "react";
-import { Search, ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Search, ChevronDown, X } from "lucide-react";
 import { useCampaignStore } from "../../store/campaign";
-
+import Paypal from "./PayPal"; // Adjust path as needed
 
 const Campaign = () => {
   const { fetchCampaigns, campaigns } = useCampaignStore();
-  const [visibleCampaigns, setVisibleCampaigns] = useState(3); // State to manage visible campaigns
-  const [showAll, setShowAll] = useState(false); // State to toggle "Show More"
+  const [visibleCampaigns, setVisibleCampaigns] = useState(3);
+  const [showAll, setShowAll] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [donationAmount, setDonationAmount] = useState(null); 
+  const [showBankInfo, setShowBankInfo] = useState(false);
+
 
   useEffect(() => {
     fetchCampaigns();
   }, [fetchCampaigns]);
 
-  // Function to toggle visibility of all campaigns
   const toggleShowAll = () => {
     setShowAll(!showAll);
-    setVisibleCampaigns(showAll ? 3 : campaigns.length); // Show all or only 3 campaigns
+    setVisibleCampaigns(showAll ? 3 : campaigns.length);
+  };
+
+  const openModal = (campaign) => {
+    setSelectedCampaign(campaign);
+    setIsModalOpen(true);
+    setDonationAmount(null); // Reset amount on open
+  };
+
+  const closeModal = () => {
+    setSelectedCampaign(null);
+    setIsModalOpen(false);
+    setDonationAmount(null); // Reset on close
   };
 
   return (
@@ -32,7 +47,6 @@ const Campaign = () => {
         </div>
       </section>
 
-      {/* Active Campaigns */}
       <section className="container mx-auto px-4 py-12">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">
           Active Campaigns
@@ -42,6 +56,7 @@ const Campaign = () => {
           contributions help fund conservation efforts and protect their
           habitat.
         </p>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {campaigns.slice(0, visibleCampaigns).map((campaign) => (
             <div
@@ -72,14 +87,37 @@ const Campaign = () => {
                     <span>${campaign.goal.toLocaleString()} goal</span>
                   </div>
                 </div>
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors">
+                <button
+                  onClick={() => openModal(campaign)}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors"
+                >
                   Donate Now
                 </button>
+                <button
+                  onClick={() => setShowBankInfo(true)}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors mt-2"
+                >
+                  Bank / Wire Transfer
+                </button>
+                {showBankInfo && (
+                  <div className="mt-4 p-4 bg-green-100 text-green-800 dark:bg-gray-700 dark:text-green-300 rounded-lg">
+                    <p className="text-sm mb-2">
+                      If this method is easier for you, drop us a message for
+                      the bank / wire transfer instructions.
+                    </p>
+                    <button
+                      onClick={() => (window.location.href = "/contact")}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                    >
+                      Contact Us
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
-        {/* Show More Button */}
+
         {campaigns.length > 3 && (
           <div className="flex justify-center mt-8">
             <button
@@ -96,6 +134,51 @@ const Campaign = () => {
           </div>
         )}
       </section>
+
+      {/* Modal */}
+      {isModalOpen && selectedCampaign && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 text-gray-600 hover:text-red-500"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <h2 className="text-xl font-semibold mb-4 text-center dark:text-white">
+              Donate to {selectedCampaign.name}
+            </h2>
+
+            {/* Amount Selection */}
+            <div className="flex justify-center gap-4 mb-6">
+              {[5, 10, 25].map((amount) => (
+                <button
+                  key={amount}
+                  onClick={() => setDonationAmount(amount)}
+                  className={`px-4 py-2 rounded-full border ${
+                    donationAmount === amount
+                      ? "bg-green-600 text-white"
+                      : "text-gray-800 dark:text-white border-gray-400"
+                  }`}
+                >
+                  ${amount}
+                </button>
+              ))}
+            </div>
+
+            {/* PayPal button (after selecting amount) */}
+            {donationAmount && (
+              <div className="w-full max-w-md mx-auto px-4">
+                <Paypal
+                  amount={donationAmount}
+                  description={`Donation to ${selectedCampaign.name}`}
+                  onClose={closeModal}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -19,12 +19,26 @@ const IncidentReportForm = () => {
     uploadedPhotos: [],
     uploadedVideos: [],
   });
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [showReference, setShowReference] = useState(false);
 
   const { createReport } = useReportStore();
 
   const showToastMessage = (title, description) => {
     setToastMessage({ title, description });
     setShowToast(true);
+  };
+
+  const generateReferenceNumber = () => {
+    // Generate a reference number format: WLR-YYYY-MMDD-XXXX
+    // Where WLR = Wildlife Report, YYYY = Year, MM = Month, DD = Day, XXXX = Random 4-digit number
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const random = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
+
+    return `WLR-${year}-${month}${day}-${random}`;
   };
 
   const handleFileUpload = async (event, type) => {
@@ -72,6 +86,10 @@ const IncidentReportForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Generate a unique reference number for this report
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+
     const reportData = {
       incidentType: e.target.elements["incident-type"].value,
       description: e.target.elements["description"].value,
@@ -81,6 +99,7 @@ const IncidentReportForm = () => {
       isAnonymous: isAnonymous,
       longitude: location.longitude,
       latitude: location.latitude,
+      referenceNumber: newReferenceNumber, // Add this line
     };
 
     // Add personal information if not anonymous
@@ -133,6 +152,9 @@ const IncidentReportForm = () => {
           "Report Submitted",
           "Your incident report has been received."
         );
+
+        // Show the reference number section
+        setShowReference(true);
 
         // Reset form
         e.target.reset();
@@ -205,6 +227,31 @@ const IncidentReportForm = () => {
             <span>Contact Park Rangers Immediately!</span>
           </div>
         </button>
+
+        {/* Reference Number Display */}
+        {showReference && (
+          <div className="mx-6 mt-4 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="font-medium text-green-800 dark:text-green-300">
+                  Reference Number
+                </h3>
+                <p className="text-lg font-bold text-green-700 dark:text-green-200">
+                  {referenceNumber}
+                </p>
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  Please save this number for tracking your report status
+                </p>
+              </div>
+              <button
+                onClick={() => navigator.clipboard.writeText(referenceNumber)}
+                className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -452,9 +499,9 @@ const IncidentReportForm = () => {
         </div>
 
         <div className="p-6">
-          <div className="">
+          {/* <div className="">
             <Statustracking />
-          </div>
+          </div> */}
           <div className="mt-4 text-center">
             <Link
               to="/help"

@@ -42,6 +42,12 @@ const reportSchema = new mongoose.Schema(
       enum: ["pending", "under_review", "resolved", "closed"],
       default: "pending",
     },
+    referenceNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true
+    },
   },
   { timestamps: true }
 );

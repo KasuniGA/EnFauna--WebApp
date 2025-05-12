@@ -24,6 +24,7 @@ export const createReport = async (req, res) => {
     priority,
     longitude,
     latitude,
+    referenceNumber,
   } = req.body;
 
   // Extract photos and videos from the request body
@@ -60,6 +61,7 @@ export const createReport = async (req, res) => {
       photos,
       videos,
       status: "pending",
+      referenceNumber,
     });
 
     // Add reporter information if not anonymous

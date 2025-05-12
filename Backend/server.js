@@ -9,6 +9,8 @@ import testimonialRoutes from "./routes/testimonial.route.js";
 import spotlightRoutes from "./routes/spotlight.route.js";
 import feedbackRoutes from "./routes/feedback.route.js";
 import photoRouter from "./routes/upload.route.js";
+import articleRoutes from "./routes/article.route.js";
+import trackRoutes from "./routes/track.route.js";
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/spotlights", spotlightRoutes);
 app.use("/api", feedbackRoutes);
 app.use("/api/photos", photoRouter);
+app.use("/api/article", articleRoutes); 
+// app.use("/api/track", trackRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5001;

@@ -69,8 +69,8 @@ const Profile = () => {
 
     try {
       await updateUserProfile({
-        name: name,
-        email: email,
+        name,
+        email,
         dob: profile.dob,
         contactNo: profile.contactNo,
         bio: profile.bio,
@@ -103,12 +103,10 @@ const Profile = () => {
     });
   };
 
-  // Get first name for greeting
   const firstName = name.split(" ")[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-300 via-teal-200 to-cyan-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-6 py-16">
-      {/* Notification */}
       {notification.show && (
         <div className="fixed top-6 right-6 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-down z-50 flex items-center">
           <span className="mr-2">✓</span>

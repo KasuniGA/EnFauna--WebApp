@@ -24,7 +24,7 @@ const Fundpg = () => {
               Join hands to protect Sri Lanka's endangered species and
               ecosystems.
             </p>
-            <div className="bg-green-600 hover:bg-green-700 text-white px-8 py-3  text-lg font-semibold transition-colors">
+            <div className="bg-white hover:bg-gray-100 text-black px-8 py-3  text-lg font-semibold transition-colors">
               Donate Now
             </div>
           </div>
@@ -37,8 +37,7 @@ const Fundpg = () => {
       {/* Adopt a Species */}
       <Adopt />
 
-      {/* Testimonials */}
-      <Testimonials />
+      
     </div>
   );
 };

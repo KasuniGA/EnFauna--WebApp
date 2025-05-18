@@ -142,7 +142,7 @@ const Home = () => {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://www.facebook.com/share/1AdsryGdAS/"
               className="text-white hover:text-green-400 transition-colors duration-300"
             >
               <span className="sr-only">Facebook</span>
@@ -151,7 +151,7 @@ const Home = () => {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://x.com/EnFauna24"
               className="text-white hover:text-green-400 transition-colors duration-300"
             >
               <span className="sr-only">Twitter</span>

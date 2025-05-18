@@ -274,12 +274,12 @@ const AboutUs = () => {
             Your involvement can make a real difference in protecting Sri Lanka's unique wildlife.
           </p>
           <div className="flex justify-center space-x-6">
-            <button className="bg-green-200 text-green-600 dark:bg-white dark:text-green-600 px-8 py-3 rounded-full hover:bg-white dark:hover:bg-green-200 transition">
+            <Link to="/home" className="bg-green-200 text-green-600 dark:bg-white dark:text-green-600 px-8 py-3 rounded-full hover:bg-white dark:hover:bg-green-200 transition">
               Explore Features
-            </button>
-            <button className="border-2 border-green-100 text-green-100 dark:border-green-600 dark:text-green-100 px-8 py-3 rounded-full hover:bg-white hover:text-green-600 dark:hover:bg-green-600 dark:hover:text-green-100 transition">
+            </Link>
+            <Link to="/report" className="border-2 border-green-100 text-green-100 dark:border-green-600 dark:text-green-100 px-8 py-3 rounded-full hover:bg-white hover:text-green-600 dark:hover:bg-green-600 dark:hover:text-green-100 transition">
               Get Involved
-            </button>
+            </Link>
           </div>
         </div>
       </div>

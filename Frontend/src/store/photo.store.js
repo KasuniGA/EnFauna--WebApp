@@ -187,70 +187,61 @@ export const usePhotoStore = create((set, get) => ({
     }
   },
 
-  likePhoto: async (photoId) => {
-    const { currentUser } = get()
+  // In your likePhoto function in the store
+likePhoto: async (photoId) => {
+  const { currentUser } = get();
 
-    if (!currentUser) {
+  if (!currentUser) {
+    return {
+      success: false,
+      message: "You must be logged in to like photos",
+    };
+  }
+
+  try {
+    console.log(`Liking photo ${photoId} by user ${currentUser.id}`);
+
+    const res = await fetch(`http://localhost:5001/api/photos/${photoId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: currentUser.id }),
+    });
+
+    console.log("Like response status:", res.status);
+
+    const data = await res.json();
+    console.log("Like response data:", data);
+
+    if (!res.ok) {
       return {
         success: false,
-        message: "You must be logged in to like photos",
-      }
+        message: data.message || `Failed to like photo: ${res.status}`,
+      };
     }
 
-    try {
-      console.log(`Liking photo ${photoId} by user ${currentUser.id}`)
+    // Update the photo in the store with the returned likes data
+    set((state) => ({
+      photos: state.photos.map((photo) =>
+        photo._id === photoId
+          ? {
+              ...photo,
+              likes: data.likes || {
+                count: (photo.likes?.users?.length || 0) + 1,
+                users: [...(photo.likes?.users || []), currentUser.id],
+              },
+            }
+          : photo
+      ),
+    }));
 
-      const res = await fetch(`http://localhost:5001/api/photos/${photoId}/like`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: currentUser.id }),
-      })
-
-      console.log("Like response status:", res.status)
-
-      // Try to parse the response as JSON
-      let data
-      try {
-        data = await res.json()
-        console.log("Like response data:", data)
-      } catch (e) {
-        console.error("Error parsing like response:", e)
-        return {
-          success: false,
-          message: `Failed to like photo: ${res.status}`,
-        }
-      }
-
-      if (!res.ok) {
-        return {
-          success: false,
-          message: data.message || `Failed to like photo: ${res.status}`,
-        }
-      }
-
-      // Update the photo in the store
-      set((state) => ({
-        photos: state.photos.map((photo) =>
-          photo._id === photoId
-            ? {
-                ...photo,
-                likes: data.likes || {
-                  count: (photo.likes?.users?.length || 0) + 1,
-                  users: [...(photo.likes?.users || []), currentUser.id],
-                },
-              }
-            : photo,
-        ),
-      }))
-
-      return { success: true }
-    } catch (error) {
-      console.error("Error liking photo:", error)
-      return { success: false, message: "Error liking photo: " + error.message }
-    }
-  },
+    return { success: true, likes: data.likes };
+  } catch (error) {
+    console.error("Error liking photo:", error);
+    return { success: false, message: "Error liking photo: " + error.message };
+  }
+},
 
   unlikePhoto: async (photoId) => {
     const { currentUser } = get()
@@ -430,4 +421,3 @@ export const usePhotoStore = create((set, get) => ({
     }
   },
 }))
-

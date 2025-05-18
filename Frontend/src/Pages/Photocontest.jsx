@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
-import { Camera, Heart, Calendar, Award, ChevronDown, Trophy, Users, Eye, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {
+  Camera,
+  Heart,
+  Calendar,
+  Award,
+  ChevronDown,
+  Trophy,
+  Users,
+  Eye,
+  X,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import { usePhotoStore } from "../store/photo.store.js";
 
 const ContestBanner = ({ contest }) => {
   return (
@@ -11,11 +22,15 @@ const ContestBanner = ({ contest }) => {
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
           <Trophy className="w-8 h-8 text-yellow-300" />
-          <h2 className="text-3xl font-bold">Current Contest: {contest.title}</h2>
+          <h2 className="text-3xl font-bold">
+            Current Contest: {contest.title}
+          </h2>
         </div>
         <div className="mb-6 space-y-2">
           <p className="text-xl text-white/90">{contest.description}</p>
-          <p className="text-lg font-medium">1st three places will display on the website</p>
+          <p className="text-lg font-medium">
+            1st three places will display on the website
+          </p>
         </div>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-2 mt-6">
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
@@ -45,8 +60,8 @@ const PhotoCard = ({ photo, rank, onViewDetails }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
       <div className="relative">
-        <img 
-          src={photo.image} 
+        <img
+          src={photo.image}
           alt={photo.title}
           className="w-full h-96 object-cover"
         />
@@ -60,7 +75,9 @@ const PhotoCard = ({ photo, rank, onViewDetails }) => {
         </button>
       </div>
       <div className="p-4">
-        <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-white">{photo.title}</h3>
+        <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-white">
+          {photo.title}
+        </h3>
         <div className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
           <p>By {photo.photographer}</p>
           <p>Location: {photo.location}</p>
@@ -97,18 +114,28 @@ const PhotoPopup = ({ photo, onClose }) => {
           <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
         <div className="flex flex-col lg:flex-row">
-          <img 
-            src={photo.image} 
-            alt={photo.title} 
+          <img
+            src={photo.image}
+            alt={photo.title}
             className="w-full lg:w-1/2 object-cover"
           />
           <div className="p-6 flex-1">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">{photo.title}</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+              {photo.title}
+            </h2>
             <div className="text-gray-600 dark:text-gray-300 space-y-2">
-              <p><strong>Photographer:</strong> {photo.photographer}</p>
-              <p><strong>Location:</strong> {photo.location}</p>
-              <p><strong>Species:</strong> {photo.species}</p>
-              <p><strong>Votes:</strong> {photo.votes}</p>
+              <p>
+                <strong>Photographer:</strong> {photo.photographer}
+              </p>
+              <p>
+                <strong>Location:</strong> {photo.location}
+              </p>
+              <p>
+                <strong>Species:</strong> {photo.species}
+              </p>
+              <p>
+                <strong>Votes:</strong> {photo.votes}
+              </p>
             </div>
           </div>
         </div>
@@ -119,42 +146,61 @@ const PhotoPopup = ({ photo, onClose }) => {
 
 const Photocontest = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [latestPhotos, setLatestPhotos] = useState([]);
+  const { photos: allPhotos, fetchPhotos } = usePhotoStore();
 
-  const photos = [
-    {
-      id: 1,
-      title: "Leopard in Yala",
-      photographer: "John Smith",
-      location: "Yala National Park",
-      species: "Sri Lankan Leopard",
-      votes: 245,
-      image: "https://i.pinimg.com/736x/e2/0d/e0/e20de085bc99e4acd5f1c05d4b717f09.jpg"
-    },
-    {
-      id: 2,
-      title: "Golden Gibbon",
-      photographer: "Sarah Johnson",
-      location: "Udawalawe",
-      species: "Golden Gibbon",
-      votes: 188,
-      image: "https://i.pinimg.com/736x/a5/5c/71/a55c71e0db5d73f73087bd9b094c89f0.jpg"
-    },
-    {
-      id: 3,
-      title: "Morning Breath",
-      photographer: "Mike Wilson",
-      location: "Sinharaja Forest",
-      species: "Morning Breath",
-      votes: 156,
-      image: "https://i.pinimg.com/736x/88/9d/91/889d91f0b31ffbb22521ba6e3ce371a5.jpg"
-    }
-  ];
+  useEffect(() => {
+    const loadPhotos = async () => {
+      try {
+        if (allPhotos.length === 0) {
+          await fetchPhotos();
+        }
+
+        // Transform photos to match PhotoCard's expected structure
+        const transformedPhotos = allPhotos
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 3)
+          .map((photo) => ({
+            // Map your store's photo structure to what PhotoCard expects
+            id: photo._id,
+            title: photo.title || "Untitled",
+            photographer: photo.photographer || photo.name || "Anonymous",
+            location: photo.location || "Unknown location",
+            species: photo.species || "Unknown species",
+            votes: photo.votes || photo.likes?.count || 0,
+            image: photo.imageUrl || photo.url || "/placeholder.jpg",
+            // Add any other fields your PhotoCard might need
+            ...photo, // Spread the rest of the photo data
+          }));
+
+        setLatestPhotos(transformedPhotos);
+      } catch (error) {
+        console.error("Failed to load contest photos:", error);
+        // Fallback data if needed
+        setLatestPhotos([
+          {
+            id: "1",
+            title: "Spotted friend",
+            photographer: "Community",
+            location: "Wasgamuwa",
+            species: "Leopard",
+            votes: 0,
+            image: "/placeholder-leopard.jpg",
+          },
+          // Add more fallbacks if needed
+        ]);
+      }
+    };
+
+    loadPhotos();
+  }, [allPhotos, fetchPhotos]);
 
   const activeContest = {
     title: "Wildlife in Action",
-    description: "Capture the dynamic moments of Sri Lankan wildlife in their natural habitat.",
-    entries: 40,
-    daysLeft: 7
+    description:
+      "Capture the dynamic moments of Sri Lankan wildlife in their natural habitat.",
+    entries: allPhotos.length, // Use actual photo count
+    daysLeft: 7,
   };
 
   return (
@@ -172,23 +218,34 @@ const Photocontest = () => {
           </div>
         </div>
       </header>
+
       <main className="container mx-auto px-4 py-8">
         <ContestBanner contest={activeContest} />
+
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Winners of the latest contest</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            Photographs of the latest contest
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {photos.map((photo, index) => (
-              <PhotoCard 
-                key={photo.id} 
-                photo={photo} 
-                rank={index + 1}
-                onViewDetails={() => setSelectedPhoto(photo)} 
-              />
+            {latestPhotos.map((photo, index) => (
+              <div key={photo.id} className="h-full">
+                <PhotoCard
+                  photo={photo}
+                  // rank={index + 1}
+                  onViewDetails={() => setSelectedPhoto(photo)}
+                />
+              </div>
             ))}
           </div>
         </div>
       </main>
-      {selectedPhoto && <PhotoPopup photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />}
+
+      {selectedPhoto && (
+        <PhotoPopup
+          photo={selectedPhoto}
+          onClose={() => setSelectedPhoto(null)}
+        />
+      )}
     </div>
   );
 };

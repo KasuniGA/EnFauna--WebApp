@@ -11,18 +11,18 @@ const Footer = () => {
         <div className="flex justify-center space-x-6 mb-4">
           <a href="/about-us" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">About</a>
           <a href="/faqs" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">FAQs</a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Blog</a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Accessibility</a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Partners</a>
+          <a href="/explore" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Blog</a>
+          {/* <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Accessibility</a>
+          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Partners</a> */}
         </div>
         <div className="flex justify-center space-x-6 mb-4">
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
+          <a href="https://www.facebook.com/share/1AdsryGdAS/" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
             <i className="fab fa-facebook"></i>
           </a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
+          <a href="https://www.instagram.com/enfauna24?utm_source=qr&igsh=bDV3dmtwMjlua2Z5" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
             <i className="fab fa-instagram"></i>
           </a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
+          <a href="https://x.com/EnFauna24" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">
             <i className="fab fa-twitter"></i>
           </a>
         </div>

@@ -247,19 +247,7 @@ const HowEnFaunaWorks = () => {
         }`} 
         style={{ transitionDelay: '1000ms' }}
       >
-        <button className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 overflow-hidden rounded-lg">
-          {/* Button background with gradient */}
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-400 to-teal-500 group-hover:from-green-500 group-hover:to-teal-600"></div>
-          
-          {/* Shimmering effect - replacing custom animation with standard classes */}
-          <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
-          
-          {/* Button text */}
-          <span className="relative z-20 flex items-center">
-            Get Started Today
-            <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </span>
-        </button>
+        
       </div>
       
       {/* Add global styles for any custom animations */}

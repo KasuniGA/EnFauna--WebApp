@@ -99,7 +99,7 @@ const Home = () => {
           <div className="w-px h-16 bg-white mb-8"></div>
           <div className="flex flex-col gap-8">
             <a
-              href="#"
+              href="https://www.instagram.com/enfauna24?utm_source=qr&igsh=bDV3dmtwMjlua2Z5"
               className="text-white hover:text-green-400 transition-colors duration-300"
             >
               <span className="sr-only">Instagram</span>
@@ -108,7 +108,7 @@ const Home = () => {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://www.facebook.com/share/1AdsryGdAS/"
               className="text-white hover:text-green-400 transition-colors duration-300"
             >
               <span className="sr-only">Facebook</span>
@@ -117,7 +117,7 @@ const Home = () => {
               </svg>
             </a>
             <a
-              href="#"
+              href="https://x.com/EnFauna24"
               className="text-white hover:text-green-400 transition-colors duration-300"
             >
               <span className="sr-only">Twitter</span>

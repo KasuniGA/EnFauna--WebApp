@@ -36,7 +36,7 @@ export const useCampaignStore = create((set) => ({
     const data = await res.json();
     if (!data.success) return { success: false, message: data.message };
 
-    // update the ui immediately, without needing a refresh
+    
     set((state) => ({
       campaigns: state.campaigns.filter((campaign) => campaign._id !== pid),
     }));

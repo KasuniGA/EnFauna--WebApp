@@ -1,6 +1,6 @@
-import mongoose from "mongoose"; // ✅ Correct import
+import mongoose from "mongoose"; 
 
-const spotlightSchema = new mongoose.Schema( // ✅ Use lowercase `mongoose`
+const spotlightSchema = new mongoose.Schema( 
   {
     name: { type: String, required: true },
     habitat: { type: String, required: true },
@@ -10,9 +10,9 @@ const spotlightSchema = new mongoose.Schema( // ✅ Use lowercase `mongoose`
     programs: { type: String, required: true },
     image: { type: String, required: true },
   },
-  { timestamps: true } // ✅ Adds createdAt and updatedAt automatically
+  { timestamps: true } 
 );
 
-const Spotlight = mongoose.model("Spotlight", spotlightSchema); // ✅ Use lowercase `mongoose`
+const Spotlight = mongoose.model("Spotlight", spotlightSchema); 
 
 export default Spotlight;

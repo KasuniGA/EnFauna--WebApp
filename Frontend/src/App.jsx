@@ -22,8 +22,8 @@ import { UserProvider } from "./Context/UserContext"
 import PhotoStoreInitializer from "./Context/PhotoStoreInitializer.jsx"
 import ErrorBoundary from "./common/ErrorBoundary"
 import ScrollToTop from "./common/ScrollToTop"
-import Loading from "./Pages/loading" // Import your Loading page
-import { Helmet } from "react-helmet" // SEO
+import Loading from "./Pages/loading" 
+import { Helmet } from "react-helmet" 
 import ForgotPassword from "./Components/ForgotPassword.jsx"
 
 // Lazy load heavy components for better performance

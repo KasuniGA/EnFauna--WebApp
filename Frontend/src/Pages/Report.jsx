@@ -30,13 +30,11 @@ const IncidentReportForm = () => {
   };
 
   const generateReferenceNumber = () => {
-    // Generate a reference number format: WLR-YYYY-MMDD-XXXX
-    // Where WLR = Wildlife Report, YYYY = Year, MM = Month, DD = Day, XXXX = Random 4-digit number
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    const random = Math.floor(1000 + Math.random() * 9000); // Random 4-digit number
+    const random = Math.floor(1000 + Math.random() * 9000); 
 
     return `WLR-${year}-${month}${day}-${random}`;
   };

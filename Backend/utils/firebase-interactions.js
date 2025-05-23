@@ -1,9 +1,6 @@
 import { ref, set, push, remove, get, query, orderByChild } from "firebase/database"
 import { rtdb } from "../../../Backend/Auth/firebase.js"
 
-/**
- * Utility functions for Firebase Realtime Database interactions
- */
 
 // Save a like to a photo
 export const saveLike = async (photoId, userId, userName) => {

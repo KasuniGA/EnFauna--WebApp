@@ -12,8 +12,6 @@ const Footer = () => {
           <a href="/about-us" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">About</a>
           <a href="/faqs" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">FAQs</a>
           <a href="/explore" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Blog</a>
-          {/* <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Accessibility</a>
-          <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">Partners</a> */}
         </div>
         <div className="flex justify-center space-x-6 mb-4">
           <a href="https://www.facebook.com/share/1AdsryGdAS/" className="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-600">

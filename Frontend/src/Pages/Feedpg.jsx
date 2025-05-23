@@ -102,22 +102,7 @@ const Feedpg = () => {
           
         }}
       ></div>
-      {/* <div className="absolute inset-0 bg-gradient-to-bl from-green-200 via-green-300 to-green-400 dark:from-gray-950 dark:via-gray-800 dark:to-gray-900 z-0"></div> */}
-
-      {/* <div
-        className="absolute inset-0 bg-cover bg-center z-0"
-        style={{
-          backgroundImage: `
-      linear-gradient(
-        to bottom right,
-        rgba(255, 255, 255, 0.6),
-        rgba(255, 255, 255, 0.3)
-      ),
-      url('https://scontent.fcmb2-2.fna.fbcdn.net/v/t39.30808-6/486327085_3194516987395804_696508427646766679_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFXmUVgq3Q_wuAjEvM1s7HbiVD8xjObqDuJUPzGM5uoO8tXFZHOOGAwqOeks2Qe_UGdg_F6CJPfEQAlr2STo_Ej&_nc_ohc=GxNhiaSsipIQ7kNvwFae1py&_nc_oc=Adm6U2B5Iz3dFa8IXMeyXri_HTpBcLfi1gPG4RSzJpnbO5RNxca9TleMwrm285MVm9I&_nc_zt=23&_nc_ht=scontent.fcmb2-2.fna&_nc_gid=CPS5AmfiBoblsuppYZZGtw&oh=00_AfHMBnqVYtt1AurcJZT5GT5ZLACOoRAXxazJ7-JC6q6s5Q&oe=67F81FB3')
-    `,
-          backgroundBlendMode: "overlay",
-        }}
-      ></div> */}
+    
 
       <div className="relative max-w-4xl mx-auto z-10">
         {formSubmitted ? (

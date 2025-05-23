@@ -38,7 +38,7 @@ export const useSpotlightStore = create((set) => ({
     const data = await res.json();
     if (!data.success) return { success: false, message: data.message };
 
-    // update the ui immediately, without needing a refresh
+    
     set((state) => ({
       spotlights: state.spotlights.filter((spotlight) => spotlight._id !== sid),
     }));

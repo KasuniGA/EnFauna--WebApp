@@ -34,7 +34,6 @@ app.use("/api/spotlights", spotlightRoutes);
 app.use("/api", feedbackRoutes);
 app.use("/api/photos", photoRouter);
 app.use("/api/article", articleRoutes); 
-// app.use("/api/track", trackRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5001;

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDonationStore } from "../../store/donation";
 import { CheckCircle } from "lucide-react";
-import Toast from "../Toast"; // Ensure this exists
-import Paypal from "../Fundpg/PayPal"; // Ensure this exists and works
+import Toast from "../Toast"; 
+import Paypal from "../Fundpg/PayPal"; 
 
 const AdoptionCard = ({ donation: initialDonation }) => {
   const [donation, setDonation] = useState(initialDonation);

@@ -38,7 +38,7 @@ export const useDonationStore = create((set) => ({
     const data = await res.json();
     if (!data.success) return { success: false, message: data.message };
 
-    // update the ui immediately, without needing a refresh
+    
     set((state) => ({
       donations: state.donations.filter((donation) => donation._id !== pid),
     }));

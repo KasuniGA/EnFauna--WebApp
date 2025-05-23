@@ -30,7 +30,7 @@ export const useTestimonialStore = create((set) => ({
     const data = await res.json();
     if (!data.success) return { success: false, message: data.message };
 
-    // update the ui immediately, without needing a refresh
+   
     set((state) => ({
       testimonials: state.testimonials.filter(
         (testimonial) => testimonial._id !== tid

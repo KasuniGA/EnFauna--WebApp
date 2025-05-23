@@ -215,9 +215,7 @@ const PhotoCard = ({ photo }) => {
             <span className="text-sm">{localComments.length}</span>
           </button>
 
-          {/* <button className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400">
-            <Share className="w-5 h-5" />
-          </button> */}
+          
         </div>
 
         {/* Comments Section */}

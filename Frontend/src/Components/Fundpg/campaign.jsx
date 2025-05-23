@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, ChevronDown, X } from "lucide-react";
 import { useCampaignStore } from "../../store/campaign";
-import Paypal from "./PayPal"; // Adjust path as needed
+import Paypal from "./PayPal"; 
 
 const Campaign = () => {
   const { fetchCampaigns, campaigns } = useCampaignStore();

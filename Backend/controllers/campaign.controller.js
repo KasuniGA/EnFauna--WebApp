@@ -12,7 +12,7 @@ export const getCampaigns = async (req, res) => {
 };
 
 export const createCampaign = async (req, res) => {
-  const { name, raised, description, goal, image } = req.body; // Extract fields
+  const { name, raised, description, goal, image } = req.body; 
 
   if (!name || !raised || !description || !goal || !image) {
     return res.status(400).json({

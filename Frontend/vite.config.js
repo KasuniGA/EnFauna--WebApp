@@ -22,18 +22,17 @@ export default defineConfig({
       },
     },
     // Development server settings
-    port: 3000, // Change the default port if needed
+    port: 3000, 
     open: true, // Automatically opens the app in the browser
     hmr: {
-      protocol: "ws", // Ensures Hot Module Reloading works over WebSocket
+      protocol: "ws", 
     },
   },
   build: {
-    // Build-specific optimizations
-    outDir: "dist", // Specifies the output directory
+    outDir: "dist", 
     rollupOptions: {
       output: {
-        assetFileNames: "assets/[name]-[hash][extname]", // Custom asset file naming
+        assetFileNames: "assets/[name]-[hash][extname]",
         chunkFileNames: "chunks/[name]-[hash].js",
         entryFileNames: "[name]-[hash].js",
       },

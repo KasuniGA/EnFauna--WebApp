@@ -12,7 +12,7 @@ export const getArticles = async (req, res) => {
 };
 
 export const createArticle = async (req, res) => {
-  const { title, description, image } = req.body; // Extract fields
+  const { title, description, image } = req.body; 
 
   if (!title || !description || !image) {
     return res.status(400).json({

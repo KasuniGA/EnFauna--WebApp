@@ -1,6 +1,6 @@
-import mongoose from "mongoose"; // ✅ Correct import
+import mongoose from "mongoose"; 
 
-const campaignSchema = new mongoose.Schema( // ✅ Use lowercase `mongoose`
+const campaignSchema = new mongoose.Schema( 
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -8,9 +8,9 @@ const campaignSchema = new mongoose.Schema( // ✅ Use lowercase `mongoose`
     goal: { type: String, required: true }, 
     image: { type: String, required: true },
   },
-  { timestamps: true } // ✅ Adds createdAt and updatedAt automatically
+  { timestamps: true } 
 );
 
-const Campaign = mongoose.model("Campaign", campaignSchema); // ✅ Use lowercase `mongoose`
+const Campaign = mongoose.model("Campaign", campaignSchema); 
 
 export default Campaign;

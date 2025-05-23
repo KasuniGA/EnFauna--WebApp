@@ -12,7 +12,7 @@ export const getDonations = async (req, res) => {
 };
 
 export const createDonation = async (req, res) => {
-  const { name, type, description, amount, image } = req.body; // Extract fields
+  const { name, type, description, amount, image } = req.body; 
 
   if (!name || !type || !description || !amount || !image) {
     return res.status(400).json({

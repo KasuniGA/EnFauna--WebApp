@@ -14,7 +14,7 @@ const DropdownMenu = () => {
 
   const handleClick = () => {
     setIsDropdownOpen(true);
-    setIsFrozen(!isFrozen); // Freeze when clicked, unfreeze on second click
+    setIsFrozen(!isFrozen); 
   };
 
   const handleOutsideClick = (e) => {

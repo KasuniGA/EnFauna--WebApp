@@ -169,8 +169,7 @@ const Photocontest = () => {
             species: photo.species || "Unknown species",
             votes: photo.votes || photo.likes?.count || 0,
             image: photo.imageUrl || photo.url || "/placeholder.jpg",
-            // Add any other fields your PhotoCard might need
-            ...photo, // Spread the rest of the photo data
+            ...photo, 
           }));
 
         setLatestPhotos(transformedPhotos);
@@ -187,7 +186,6 @@ const Photocontest = () => {
             votes: 0,
             image: "/placeholder-leopard.jpg",
           },
-          // Add more fallbacks if needed
         ]);
       }
     };

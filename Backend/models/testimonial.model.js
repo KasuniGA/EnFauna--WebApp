@@ -1,14 +1,14 @@
-import mongoose from "mongoose"; // ✅ Correct import
+import mongoose from "mongoose"; 
 
-const testimonialSchema = new mongoose.Schema( // ✅ Use lowercase `mongoose`
+const testimonialSchema = new mongoose.Schema( 
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
     
   },
-  { timestamps: true } // ✅ Adds createdAt and updatedAt automatically
+  { timestamps: true } 
 );
 
-const Testimonial = mongoose.model("Testimonial", testimonialSchema); // ✅ Use lowercase `mongoose`
+const Testimonial = mongoose.model("Testimonial", testimonialSchema); 
 
 export default Testimonial;

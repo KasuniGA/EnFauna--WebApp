@@ -67,9 +67,7 @@ const EnFaunaApp = () => {
 
             <div className="prose max-w-none mt-6 text-gray-700 dark:text-gray-300">
               <p>{article.description}</p>
-              <div className="mt-4">
-                {/* This would contain the full article content */}
-              </div>
+              <div className="mt-4"></div>
             </div>
           </div>
         </div>

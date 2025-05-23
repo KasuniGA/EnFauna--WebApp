@@ -19,7 +19,7 @@ const heroImages = [
   '../src/assets/kingfisher.jpg'
 ];
 
-// Updated mock data for endangered species (kept from original code)
+
 const endangeredSpecies = [
   { 
     name: 'Ceylon Elephant', 

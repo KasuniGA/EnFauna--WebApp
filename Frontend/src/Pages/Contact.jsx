@@ -166,21 +166,7 @@ const Contact = () => {
                 ></textarea>
               </div>
 
-              {/* <div>
-                <label
-                  htmlFor="attachment"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                >
-                  Attachment (Optional)
-                </label>
-                <input
-                  type="file"
-                  id="attachment"
-                  name="attachment"
-                  onChange={handleInputChange}
-                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 dark:file:bg-gray-700 dark:file:text-gray-200 dark:hover:file:bg-gray-600"
-                />
-              </div> */}
+              
 
               <div className="flex justify-between items-center">
                 <button

@@ -19,7 +19,7 @@ const PhotoUploadForm = () => {
     description: "",
     species: "",
     location: "",
-    imageUrl: "", // Added to store Cloudinary URL
+    imageUrl: "", 
   });
 
   // Sri Lanka wildlife background images grid
@@ -71,7 +71,7 @@ const PhotoUploadForm = () => {
     reader.readAsDataURL(file);
 
     // Upload to Cloudinary
-    const uploadPreset = "test_image"; // Using Cloudinary's default preset
+    const uploadPreset = "test_image"; 
     const cloudinaryURL = `https://api.cloudinary.com/v1_1/dqyone0du/image/upload`;
 
     const data = new FormData();
@@ -143,7 +143,7 @@ const PhotoUploadForm = () => {
         description: formData.description,
         species: formData.species,
         location: formData.location,
-        imageUrl: formData.imageUrl, // Using the Cloudinary URL
+        imageUrl: formData.imageUrl, 
       });
 
       if (result.success) {

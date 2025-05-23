@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import { useReportStore } from '../store/report.store';
 
-// Mock GMap and Statustracking Components
+
 vi.mock('../Components/Report/GMap', () => ({
   default: ({ onLocationSelect }) => (
     <button onClick={() => onLocationSelect(6.9271, 79.8612)}>Select Location</button>
@@ -14,7 +14,7 @@ vi.mock('../Components/Report/GMap', () => ({
 
 vi.mock('../Components/Report/Statustracking', () => () => <div>Status Tracking</div>);
 
-// Mock Toast
+
 vi.mock('../Components/Toast', () => ({
   default: ({ title, description }) => (
     <div data-testid="toast">{title} - {description}</div>

@@ -159,10 +159,10 @@ const SpotlightSection = () => {
           <div className="lg:w-1/2 p-8 dark:bg-gray-800 text-gray-800 dark:text-white">
             <div className="mt-4 text-sm text-gray-500">
               {new Date(spotlight.createdAt).toLocaleDateString("en-US", {
-                weekday: "long", // Full weekday name (e.g., "Friday")
-                day: "numeric", // Day of the month (e.g., "28")
-                month: "long", // Full month name (e.g., "February")
-                year: "numeric", // Full year (e.g., "2025")
+                weekday: "long", 
+                day: "numeric", 
+                month: "long", 
+                year: "numeric", 
               })}
             </div>
             <h2 className="text-3xl font-bold mb-8">{spotlight.name}</h2>

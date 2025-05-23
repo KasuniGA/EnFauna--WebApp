@@ -12,7 +12,7 @@ import {
 const router = express.Router()
 
 // Get all photos
-router.get("/", getPhotos) // Changed from "/all" to "/" for consistency
+router.get("/", getPhotos) 
 
 // Get a single photo
 router.get("/:id", getPhoto)
@@ -21,13 +21,13 @@ router.get("/:id", getPhoto)
 router.post("/", createPhoto)
 
 // Like a photo
-router.post("/:id/like", likePhoto) // Changed from :photoId to :id for consistency
+router.post("/:id/like", likePhoto) 
 
 // Unlike a photo
-router.post("/:id/unlike", unlikePhoto) // Changed from :photoId to :id for consistency
+router.post("/:id/unlike", unlikePhoto) 
 
 // Add a comment to a photo
-router.post("/:id/comment", addComment) // Changed from :photoId to :id for consistency
+router.post("/:id/comment", addComment) 
 
 // Delete a photo
 router.delete("/:id", deletePhoto)

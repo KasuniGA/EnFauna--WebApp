@@ -21,7 +21,8 @@ const FeedbackSection = ({
           {[
             {
               key: "mostEnjoyedAspect",
-              label: "What did you enjoy the most?",
+              label:
+                "Which park did you visit and what did you enjoy the most?",
               icon: <Star size={20} className="text-gray-400" />,
             },
             {

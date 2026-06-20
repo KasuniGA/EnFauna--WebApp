@@ -14,7 +14,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@react-google-maps/api": "^2.20.6",
     "lucide-react": "^0.482.0",
-    "multer": "^2.1.1",
+    "multer": "^2.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-helmet": "^6.1.0",
